@@ -4,13 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Servidor HTTPS seguro implementado en Node.js con certificado SSL autofirmado" />
-  <title>Secure Web - Servidor HTTPS Profesional</title>
+
   <link rel="stylesheet" href="./css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <title>Secure Web - Servidor HTTPS Profesional</title>
 </head>
 
 <body>
   <div class="header">
-    <div class="lock-icon">🔐</div>
+    <div class="lock-icon">
+      <i class="fa-solid fa-file-shield"></i>
+    </div>
     <h1>Secure Web Server</h1>
     <p class="subtitle">Servidor HTTPS profesional implementado en Node.js con certificado SSL autofirmado y encriptación de grado empresarial</p>
   </div>
@@ -19,7 +24,9 @@
 
     <!-- Card: Estado de Conexión -->
     <div class="card">
-      <h2><span class="icon">🛡️</span> Estado de Conexión</h2>
+      <h2><span class="icon">
+        <i class="fa-solid fa-shield-halved"></i>
+      </span> Estado de Conexión</h2>
       <p>Verifica el estado de seguridad de tu conexión HTTPS en tiempo real.</p>
       <button id="check-security">Verificar Seguridad</button>
       <div id="security-result" class="hidden"></div>
@@ -27,7 +34,9 @@
 
     <!-- Card: Información del Certificado SSL -->
     <div class="card">
-      <h2><span class="icon">📜</span> Certificado SSL</h2>
+      <h2><span class="icon">
+        <i class="fa-solid fa-scroll"></i>
+      </span> Certificado SSL</h2>
       <p>Información detallada del certificado de seguridad en uso.</p>
       <button id="load-cert">Cargar Información</button>
       <div id="cert-info" class="hidden">
@@ -37,7 +46,9 @@
 
     <!-- Card: Detalles Técnicos -->
     <div class="card">
-      <h2><span class="icon">⚙️</span> Especificaciones Técnicas</h2>
+      <h2><span class="icon">
+        <i class="fa-solid fa-gears"></i>
+      </span> Especificaciones Técnicas</h2>
       <p>Tecnologías y protocolos de seguridad implementados en este servidor.</p>
       <ul class="tech-list">
         <li>Node.js + Express Framework</li>
@@ -50,7 +61,9 @@
 
     <!-- Card: Métricas de Seguridad -->
     <div class="card">
-      <h2><span class="icon">📊</span> Métricas de Seguridad</h2>
+      <h2><span class="icon">
+        <i class="fa-solid fa-chart-line"></i>
+      </span> Métricas de Seguridad</h2>
       <p>Indicadores clave del nivel de protección implementado.</p>
       <div class="cert-details">
         <div class="cert-item">
@@ -76,7 +89,9 @@
 
     <!-- Card: Información del Emisor -->
     <div class="card">
-      <h2><span class="icon">🏛️</span> Información del Emisor</h2>
+      <h2><span class="icon">
+        <i class="fa-solid fa-landmark"></i>
+      </span> Información del Emisor</h2>
       <p>Detalles sobre la entidad que emitió el certificado SSL.</p>
       <div class="cert-details">
         <div class="cert-item">
@@ -100,7 +115,9 @@
 
     <!-- Card: Usos del Certificado -->
     <div class="card">
-      <h2><span class="icon">🔑</span> Usos del Certificado</h2>
+      <h2><span class="icon">
+        <i class="fa-solid fa-key"></i>
+      </span> Usos del Certificado</h2>
       <p>Propósitos autorizados para este certificado de seguridad.</p>
       <ul class="tech-list" id="key-usage-list">
         <li>Cargando información...</li>

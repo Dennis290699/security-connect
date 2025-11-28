@@ -18,5 +18,5 @@ const httpsServer = https.createServer({ key, cert }, app);
 const PORT = 3000;
 
 httpsServer.listen(PORT, () => {
-  console.log(`🔐 Servidor HTTPS ejecutándose en https://localhost:${PORT}`);
+  console.log(`Servidor HTTPS ejecutándose en https://localhost:${PORT}`);
 });

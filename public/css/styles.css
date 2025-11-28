@@ -120,7 +120,7 @@ body::before {
   animation: fadeInUp 0.8s ease 0.2s backwards;
 }
 
-.header .lock-icon {
+.header .lock-icon i {
   font-size: 72px;
   display: inline-block;
   animation: pulse 2s ease infinite, fadeIn 0.8s ease 0.1s backwards;
@@ -183,9 +183,12 @@ body::before {
   color: var(--text-primary);
 }
 
-.card h2 .icon {
+.card h2 .icon i {
   font-size: 28px;
   display: inline-block;
+  width: 1em;
+  height: 1em;
+  line-height: 1;
 }
 
 .card p {
@@ -210,6 +213,7 @@ button {
   box-shadow: 0 4px 16px rgba(0, 242, 254, 0.3);
   position: relative;
   overflow: hidden;
+  margin-bottom: 25px;
 }
 
 button::before {
@@ -271,7 +275,7 @@ button:active {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px 18px;
+  padding: 14px 12px;
   background: rgba(255, 255, 255, 0.03);
   border-radius: var(--radius-sm);
   border: 1px solid rgba(255, 255, 255, 0.05);
@@ -452,10 +456,13 @@ button:active {
   .header h1 {
     font-size: 40px;
   }
-  
-  .header .lock-icon {
-    font-size: 56px;
-  }
+
+  .header .lock-icon i {
+  font-size: 72px;
+  display: inline-block;
+  animation: pulse 2s ease infinite, fadeIn 0.8s ease 0.1s backwards;
+  filter: drop-shadow(0 0 20px rgba(0, 242, 254, 0.5));
+}
   
   .dashboard {
     grid-template-columns: 1fr;

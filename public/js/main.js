@@ -18,7 +18,7 @@ document.getElementById("check-security").addEventListener("click", async () => 
   if (isSecure) {
     resultDiv.className = "success fade-in";
     resultDiv.innerHTML = `
-      <strong style="font-size: 18px; display: block; margin-bottom: 8px;">🔒 Conexión Segura Establecida</strong>
+      <strong style="font-size: 18px; display: block; margin-bottom: 8px; margin-top: 25px;">Conexión Segura Establecida</strong>
       <p style="margin: 0; line-height: 1.6;">
         Tu conexión está protegida con HTTPS. Todos los datos transmitidos están encriptados 
         con cifrado de grado empresarial AES-256-GCM.
@@ -30,7 +30,7 @@ document.getElementById("check-security").addEventListener("click", async () => 
   } else {
     resultDiv.className = "error fade-in";
     resultDiv.innerHTML = `
-      <strong style="font-size: 18px; display: block; margin-bottom: 8px;">⚠️ Conexión No Segura</strong>
+      <strong style="font-size: 18px; display: block; margin-bottom: 8px; margin-top: 25px;">Conexión No Segura</strong>
       <p style="margin: 0;">
         Este sitio NO está usando HTTPS. Los datos podrían estar en riesgo.
       </p>
