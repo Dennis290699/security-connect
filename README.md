@@ -6,6 +6,73 @@
 
 Este proyecto forma parte de las prácticas de la **Facultad de Ingeniería – Universidad Central del Ecuador (UCE)** dentro de la **asignatura de Criptografía**, cuyo objetivo es implementar un entorno seguro mediante el uso de **certificados digitales autofirmados**, comprendiendo su estructura, propósito y configuración dentro de un servidor HTTPS desarrollado en **Node.js**.
 
+---
+
+# 🏗️ Estructura del Proyecto
+
+El proyecto está organizado de manera modular para separar la lógica del servidor, la interfaz de usuario y los certificados de seguridad.
+
+```
+secure-web/
+├── certs/                  # Directorio de certificados (Claves privadas y públicas)
+│   ├── server.key          # Clave privada del servidor
+│   └── server.crt          # Certificado digital autofirmado
+├── public/                 # Archivos estáticos del Frontend
+│   ├── css/                # Estilos de la aplicación
+│   ├── js/                 # Lógica del cliente (Frontend)
+│   │   └── main.js         # Script principal del cliente
+│   └── index.html          # Página principal
+├── src/                    # Código fuente del Backend
+│   ├── app.js              # Configuración de la aplicación Express
+│   └── server.js           # Punto de entrada del servidor HTTPS
+├── package.json            # Definición de dependencias y scripts
+└── README.md               # Documentación del proyecto
+```
+
+---
+
+# 💻 Tecnologías Utilizadas
+
+Este proyecto utiliza un stack moderno y ligero para demostrar la implementación de seguridad web:
+
+*   **Node.js**: Entorno de ejecución para JavaScript en el servidor.
+*   **Express.js**: Framework web para manejar rutas y middleware.
+*   **OpenSSL**: Herramienta estándar para la generación de claves y certificados X.509.
+*   **HTML5 / CSS3**: Estructura y diseño de la interfaz de usuario.
+*   **JavaScript (ES6+)**: Lógica tanto en el cliente como en el servidor.
+*   **Crypto Module**: Módulo nativo de Node.js para operaciones criptográficas y análisis de certificados.
+
+---
+
+# 📂 Descripción de Archivos
+
+### Backend (`src/`)
+
+*   **`src/server.js`**: Es el punto de entrada de la aplicación.
+    *   Carga los certificados SSL (`server.key` y `server.crt`).
+    *   Inicia el servidor HTTPS en el puerto 3000.
+    *   Garantiza que todas las comunicaciones estén cifradas.
+
+*   **`src/app.js`**: Contiene la lógica de la aplicación Express.
+    *   Configura el middleware para servir archivos estáticos desde `public/`.
+    *   Define el endpoint `/api/cert-info` que lee, parsea y devuelve la información detallada del certificado al frontend.
+    *   Realiza cálculos de huellas digitales (Fingerprints) y validación de fechas.
+
+### Frontend (`public/`)
+
+*   **`public/index.html`**: La interfaz gráfica que visualiza el usuario.
+*   **`public/js/main.js`**: Script que se ejecuta en el navegador.
+    *   Consume la API `/api/cert-info`.
+    *   Manipula el DOM para mostrar dinámicamente los datos del certificado (Emisor, Sujeto, Validez, Huellas).
+    *   Maneja las animaciones y la interactividad de la página.
+
+### Seguridad (`certs/`)
+
+*   **`certs/server.key`**: La clave privada del servidor. **NUNCA** debe compartirse. Se usa para descifrar el tráfico entrante durante el handshake TLS.
+*   **`certs/server.crt`**: El certificado público. Se envía a los clientes (navegadores) para que puedan verificar la identidad del servidor y establecer una conexión segura.
+
+---
+
 # 🏫 1. Introducción
 
 En el contexto de la cátedra de Criptografía, es fundamental comprender:
