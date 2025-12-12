@@ -1,3 +1,15 @@
+// Función reutilizable para cargar la información del certificado
+async function loadCertificateData() {
+  const response = await fetch("/api/cert-info");
+  const data = await response.json();
+
+  if (data.success) {
+    return data.certificate;
+  } else {
+    throw new Error(data.error || "Error al cargar certificado");
+  }
+}
+
 // Verificación de Seguridad
 document.getElementById("check-security").addEventListener("click", async () => {
   const resultDiv = document.getElementById("security-result");
@@ -41,142 +53,215 @@ document.getElementById("check-security").addEventListener("click", async () => 
   button.disabled = false;
 });
 
-// Cargar Información del Certificado
+// Cargar información del certificado automáticamente al cargar la página
+async function loadCertificateInfo() {
+  try {
+    const cert = await loadCertificateData();
+
+    // Actualizar información del emisor con datos reales
+    document.getElementById("org-name").textContent =
+      `${cert.issuer.organization} (${cert.issuer.commonName})`;
+    document.getElementById("org-location").textContent =
+      cert.issuer.locality !== 'N/A' ? cert.issuer.locality : cert.issuer.country;
+    document.getElementById("cert-type").textContent = cert.metadata.status;
+    document.getElementById("cert-validity").textContent =
+      `${cert.validity.totalDays} días (${cert.validity.daysRemaining} restantes)`;
+
+    // Actualizar usos del certificado con información real
+    const keyUsageList = document.getElementById("key-usage-list");
+    const usages = [
+      `Nombre Común (CN): ${cert.subject.commonName}`,
+      `Organización (O): ${cert.subject.organization}`,
+      `Unidad Organizativa (OU): ${cert.subject.organizationalUnit}`,
+      `Algoritmo: ${cert.technical.algorithm}`,
+      `Formato: ${cert.technical.format}`
+    ];
+
+    keyUsageList.innerHTML = usages.map((usage, index) =>
+      `<li style="animation-delay: ${index * 0.1}s;" class="slide-up">${usage}</li>`
+    ).join("");
+
+  } catch (error) {
+    console.error("Error al cargar información del certificado:", error);
+    // Opcional: mostrar un mensaje de error en la UI si no se puede cargar
+    // document.getElementById("org-name").textContent = "No disponible";
+  }
+
+  // Actualizar estado del servidor en métricas de seguridad
+  const isSecure = window.location.protocol === "https:";
+  const serverStatusBadge = document.querySelector('.status-badge');
+  serverStatusBadge.textContent = isSecure ? 'Activo' : 'Inseguro';
+  serverStatusBadge.style.background = isSecure ? 'var(--success-gradient)' : 'var(--secondary-gradient)';
+}
+
+// Abrir modal y cargar información en el modal
 document.getElementById("load-cert").addEventListener("click", async () => {
-  const certInfoDiv = document.getElementById("cert-info");
-  const certDetailsDiv = certInfoDiv.querySelector(".cert-details");
+  const modal = document.getElementById('cert-modal');
+  const certDetailsDiv = document.getElementById('cert-details-content');
   const button = document.getElementById("load-cert");
 
-  // Mostrar loading
+  // Restablecer el botón a estado inicial cada vez que se haga clic
   button.innerHTML = '<span class="loading"></span> Cargando...';
   button.disabled = true;
+  button.style.background = ''; // Restablece el color del botón
+
+  // Abrir el modal inmediatamente
+  modal.classList.add('active');
+
+  // Evitar scroll en el fondo
+  document.body.classList.add('modal-open');
 
   try {
-    const response = await fetch("/api/cert-info");
-    const data = await response.json();
+    const cert = await loadCertificateData();
 
-    if (data.success) {
-      const cert = data.certificate;
-
-      // Actualizar información del certificado con datos reales
-      certDetailsDiv.innerHTML = `
-        <div class="cert-item slide-up">
+    // Actualizar información del certificado con datos reales en el modal
+    certDetailsDiv.innerHTML = `
+      <div class="cert-item slide-up">
+        <div class="cert-label-group">
+          <i class="fa-solid fa-user icon-sm"></i>
           <span class="label">Nombre Común (CN)</span>
-          <span class="value">${cert.subject.commonName}</span>
         </div>
-        <div class="cert-item slide-up" style="animation-delay: 0.05s;">
+        <span class="value">${cert.subject.commonName}</span>
+      </div>
+      <div class="cert-item slide-up" style="animation-delay: 0.05s;">
+        <div class="cert-label-group">
+          <i class="fa-solid fa-building icon-sm"></i>
           <span class="label">Organización (O)</span>
-          <span class="value">${cert.subject.organization}</span>
         </div>
-        <div class="cert-item slide-up" style="animation-delay: 0.1s;">
+        <span class="value">${cert.subject.organization}</span>
+      </div>
+      <div class="cert-item slide-up" style="animation-delay: 0.1s;">
+        <div class="cert-label-group">
+          <i class="fa-solid fa-sitemap icon-sm"></i>
           <span class="label">Unidad Organizativa (OU)</span>
-          <span class="value">${cert.subject.organizationalUnit}</span>
         </div>
-        <div class="cert-item slide-up" style="animation-delay: 0.15s;">
+        <span class="value">${cert.subject.organizationalUnit}</span>
+      </div>
+      <div class="cert-item slide-up" style="animation-delay: 0.15s;">
+        <div class="cert-label-group">
+          <i class="fa-solid fa-user-tie icon-sm"></i>
           <span class="label">Emisor CN</span>
-          <span class="value">${cert.issuer.commonName}</span>
         </div>
-        <div class="cert-item slide-up" style="animation-delay: 0.2s;">
+        <span class="value">${cert.issuer.commonName}</span>
+      </div>
+      <div class="cert-item slide-up" style="animation-delay: 0.2s;">
+        <div class="cert-label-group">
+          <i class="fa-solid fa-building-columns icon-sm"></i>
           <span class="label">Emisor Organización</span>
-          <span class="value">${cert.issuer.organization}</span>
         </div>
-        <div class="cert-item slide-up" style="animation-delay: 0.25s;">
+        <span class="value">${cert.issuer.organization}</span>
+      </div>
+      <div class="cert-item slide-up" style="animation-delay: 0.25s;">
+        <div class="cert-label-group">
+          <i class="fa-solid fa-sitemap icon-sm"></i>
           <span class="label">Emisor OU</span>
-          <span class="value">${cert.issuer.organizationalUnit}</span>
         </div>
-        <div class="cert-item slide-up" style="animation-delay: 0.3s;">
+        <span class="value">${cert.issuer.organizationalUnit}</span>
+      </div>
+      <div class="cert-item slide-up" style="animation-delay: 0.3s;">
+        <div class="cert-label-group">
+          <i class="fa-solid fa-calendar-plus icon-sm"></i>
           <span class="label">Emitido el</span>
-          <span class="value">${cert.validity.notBeforeFormatted}</span>
         </div>
-        <div class="cert-item slide-up" style="animation-delay: 0.35s;">
+        <span class="value">${cert.validity.notBeforeFormatted}</span>
+      </div>
+      <div class="cert-item slide-up" style="animation-delay: 0.35s;">
+        <div class="cert-label-group">
+          <i class="fa-solid fa-calendar-xmark icon-sm"></i>
           <span class="label">Vencimiento el</span>
-          <span class="value">${cert.validity.notAfterFormatted}</span>
         </div>
-        <div class="cert-item slide-up" style="animation-delay: 0.4s;">
+        <span class="value">${cert.validity.notAfterFormatted}</span>
+      </div>
+      <div class="cert-item slide-up" style="animation-delay: 0.4s;">
+        <div class="cert-label-group">
+          <i class="fa-solid fa-fingerprint icon-sm"></i>
           <span class="label">Certificado (SHA-256)</span>
-          <span class="value" style="font-size: 11px; word-break: break-all;">${cert.fingerprints.sha256Raw}</span>
         </div>
-        <div class="cert-item slide-up" style="animation-delay: 0.45s;">
+        <span class="value" style="font-size: 11px; word-break: break-all;">${cert.fingerprints.sha256Raw}</span>
+      </div>
+      <div class="cert-item slide-up" style="animation-delay: 0.45s;">
+        <div class="cert-label-group">
+          <i class="fa-solid fa-key icon-sm"></i>
           <span class="label">Clave Pública (SHA-256)</span>
-          <span class="value" style="font-size: 11px; word-break: break-all;">${cert.fingerprints.publicKey}</span>
         </div>
-        <div class="cert-item slide-up" style="animation-delay: 0.5s;">
+        <span class="value" style="font-size: 11px; word-break: break-all;">${cert.fingerprints.publicKey}</span>
+      </div>
+      <div class="cert-item slide-up" style="animation-delay: 0.5s;">
+        <div class="cert-label-group">
+          <i class="fa-solid fa-cogs icon-sm"></i>
           <span class="label">Algoritmo</span>
-          <span class="value">${cert.technical.algorithm}</span>
         </div>
-        <div class="cert-item slide-up" style="animation-delay: 0.55s;">
+        <span class="value">${cert.technical.algorithm}</span>
+      </div>
+      <div class="cert-item slide-up" style="animation-delay: 0.55s;">
+        <div class="cert-label-group">
+          <i class="fa-solid fa-hashtag icon-sm"></i>
           <span class="label">Número de Serie</span>
-          <span class="value" style="font-size: 12px;">${cert.technical.serialNumber}</span>
         </div>
-        <div class="cert-item slide-up" style="animation-delay: 0.6s;">
+        <span class="value" style="font-size: 12px;">${cert.technical.serialNumber}</span>
+      </div>
+      <div class="cert-item slide-up" style="animation-delay: 0.6s;">
+        <div class="cert-label-group">
+          <i class="fa-solid fa-code-branch icon-sm"></i>
           <span class="label">Versión</span>
-          <span class="value">${cert.technical.format}</span>
         </div>
-        <div class="cert-item slide-up" style="animation-delay: 0.65s;">
+        <span class="value">${cert.technical.format}</span>
+      </div>
+      <div class="cert-item slide-up" style="animation-delay: 0.65s;">
+        <div class="cert-label-group">
+          <i class="fa-solid fa-shield-alt icon-sm"></i>
           <span class="label">Estado</span>
-          <span class="value">${cert.validity.isValid ? '✓ Válido' : '✗ Expirado'}</span>
         </div>
-      `;
+        <span class="value">${cert.validity.isValid ? '✓ Válido' : '✗ Expirado'}</span>
+      </div>
+    `;
 
-      certInfoDiv.classList.remove("hidden");
-      certInfoDiv.classList.add("fade-in");
-
-      button.innerHTML = '✓ Información Cargada';
-      button.style.background = 'var(--success-gradient)';
-
-    } else {
-      throw new Error(data.error || "Error al cargar certificado");
-    }
+    button.innerHTML = 'Información Cargada';
+    button.style.background = 'var(--success-gradient)';
 
   } catch (error) {
     certDetailsDiv.innerHTML = `
       <div class="cert-item" style="border-color: rgba(245, 87, 108, 0.3);">
-        <span class="label">Error</span>
+        <div class="cert-label-group">
+          <i class="fa-solid fa-exclamation-triangle icon-sm"></i>
+          <span class="label">Error</span>
+        </div>
         <span class="value" style="color: #f5576c;">No se pudo cargar la información</span>
       </div>
     `;
-    certInfoDiv.classList.remove("hidden");
     button.innerHTML = 'Reintentar';
     button.disabled = false;
   }
 });
 
-// Cargar información del certificado automáticamente al cargar la página
-async function loadCertificateInfo() {
-  try {
-    const response = await fetch("/api/cert-info");
-    const data = await response.json();
+// Cerrar modal
+const modal = document.getElementById('cert-modal');
+const closeBtn = document.querySelector('.close-btn');
 
-    if (data.success) {
-      const cert = data.certificate;
+closeBtn.addEventListener('click', () => {
+  modal.classList.remove('active');
+  document.body.classList.remove('modal-open'); // Restablece el scroll del fondo
 
-      // Actualizar información del emisor con datos reales
-      document.getElementById("org-name").textContent =
-        `${cert.issuer.organization} (${cert.issuer.commonName})`;
-      document.getElementById("org-location").textContent =
-        cert.issuer.locality !== 'N/A' ? cert.issuer.locality : cert.issuer.country;
-      document.getElementById("cert-type").textContent = cert.metadata.status;
-      document.getElementById("cert-validity").textContent =
-        `${cert.validity.totalDays} días (${cert.validity.daysRemaining} restantes)`;
+  // Restablecer el botón a su estado original
+  const button = document.getElementById("load-cert");
+  button.innerHTML = 'Cargar Información';
+  button.disabled = false;
+  button.style.background = ''; // Restablece el color del botón
+});
 
-      // Actualizar usos del certificado con información real
-      const keyUsageList = document.getElementById("key-usage-list");
-      const usages = [
-        `Nombre Común (CN): ${cert.subject.commonName}`,
-        `Organización (O): ${cert.subject.organization}`,
-        `Unidad Organizativa (OU): ${cert.subject.organizationalUnit}`,
-        `Algoritmo: ${cert.technical.algorithm}`,
-        `Formato: ${cert.technical.format}`
-      ];
+// Cerrar al hacer clic fuera del contenido
+window.addEventListener('click', (e) => {
+  if (e.target === modal) {
+    modal.classList.remove('active');
+    document.body.classList.remove('modal-open'); // Restablece el scroll del fondo
 
-      keyUsageList.innerHTML = usages.map((usage, index) =>
-        `<li style="animation-delay: ${index * 0.1}s;" class="slide-up">${usage}</li>`
-      ).join("");
-    }
-  } catch (error) {
-    console.error("Error al cargar información del certificado:", error);
+    // Restablecer el botón a su estado original
+    const button = document.getElementById("load-cert");
+    button.innerHTML = 'Cargar Información';
+    button.disabled = false;
+    button.style.background = ''; // Restablece el color del botón
   }
-}
+});
 
 // Animación de entrada para las tarjetas
 function animateCards() {

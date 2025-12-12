@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Servidor HTTPS seguro implementado en Node.js con certificado SSL autofirmado" />
 
   <link rel="stylesheet" href="./css/styles.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
   <title>Secure Web - Servidor HTTPS Profesional</title>
 </head>
 
@@ -17,16 +18,15 @@
       <i class="fa-solid fa-file-shield"></i>
     </div>
     <h1>Secure Web Server</h1>
-    <p class="subtitle">Servidor HTTPS profesional implementado en Node.js con certificado SSL autofirmado y encriptación de grado empresarial</p>
+    <p class="subtitle">Servidor HTTPS profesional implementado en Node.js con certificado SSL autofirmado y
+      encriptación de grado empresarial</p>
   </div>
 
   <div class="dashboard">
 
     <!-- Card: Estado de Conexión -->
     <div class="card">
-      <h2><span class="icon">
-        <i class="fa-solid fa-shield-halved"></i>
-      </span> Estado de Conexión</h2>
+      <h2><span class="icon"><i class="fa-solid fa-shield-halved"></i></span> Estado de Conexión</h2>
       <p>Verifica el estado de seguridad de tu conexión HTTPS en tiempo real.</p>
       <button id="check-security">Verificar Seguridad</button>
       <div id="security-result" class="hidden"></div>
@@ -34,80 +34,91 @@
 
     <!-- Card: Información del Certificado SSL -->
     <div class="card">
-      <h2><span class="icon">
-        <i class="fa-solid fa-scroll"></i>
-      </span> Certificado SSL</h2>
+      <h2><span class="icon"><i class="fa-solid fa-scroll"></i></span> Certificado SSL</h2>
       <p>Información detallada del certificado de seguridad en uso.</p>
-      <button id="load-cert">Cargar Información</button>
-      <div id="cert-info" class="hidden">
-        <div class="cert-details"></div>
-      </div>
+      <button id="load-cert">Verificar Certificado</button>
     </div>
 
     <!-- Card: Detalles Técnicos -->
     <div class="card">
-      <h2><span class="icon">
-        <i class="fa-solid fa-gears"></i>
-      </span> Especificaciones Técnicas</h2>
+      <h2><span class="icon"><i class="fa-solid fa-gears"></i></span> Especificaciones Técnicas</h2>
       <p>Tecnologías y protocolos de seguridad implementados en este servidor.</p>
       <ul class="tech-list">
-        <li>Node.js + Express Framework</li>
-        <li>HTTPS con TLS 1.3</li>
-        <li>Certificado SSL X.509 v3</li>
-        <li>Encriptación AES-256-GCM</li>
-        <li>Arquitectura Modular ES6+</li>
+        <li><i class="fa-solid fa-code-branch"></i> Node.js + Express Framework</li>
+        <li><i class="fa-solid fa-lock"></i> HTTPS con TLS 1.3</li>
+        <li><i class="fa-solid fa-certificate"></i> Certificado SSL X.509 v3</li>
+        <li><i class="fa-solid fa-shield-keyhole"></i> Encriptación AES-256-GCM</li>
+        <li><i class="fa-solid fa-layer-group"></i> Arquitectura Modular ES6+</li>
       </ul>
     </div>
 
     <!-- Card: Métricas de Seguridad -->
     <div class="card">
-      <h2><span class="icon">
-        <i class="fa-solid fa-chart-line"></i>
-      </span> Métricas de Seguridad</h2>
+      <h2><span class="icon"><i class="fa-solid fa-chart-line"></i></span> Métricas de Seguridad</h2>
       <p>Indicadores clave del nivel de protección implementado.</p>
       <div class="cert-details">
         <div class="cert-item">
-          <span class="label">Nivel de Encriptación</span>
+          <div class="cert-label-group">
+            <i class="fa-solid fa-lock icon-sm"></i>
+            <span class="label">Nivel de Encriptación</span>
+          </div>
           <span class="value">256-bit</span>
         </div>
         <div class="cert-item">
-          <span class="label">Protocolo</span>
+          <div class="cert-label-group">
+            <i class="fa-solid fa-network-wired icon-sm"></i>
+            <span class="label">Protocolo</span>
+          </div>
           <span class="value">TLS 1.3</span>
         </div>
         <div class="cert-item">
-          <span class="label">Algoritmo de Firma</span>
+          <div class="cert-label-group">
+            <i class="fa-solid fa-signature icon-sm"></i>
+            <span class="label">Algoritmo de Firma</span>
+          </div>
           <span class="value">SHA-256</span>
         </div>
         <div class="cert-item">
-          <span class="label">Estado del Servidor</span>
-          <span class="value">
-            <span class="status-badge">Activo</span>
-          </span>
+          <div class="cert-label-group">
+            <i class="fa-solid fa-server icon-sm"></i>
+            <span class="label">Estado del Servidor</span>
+          </div>
+          <span class="value"><span class="status-badge">Activo</span></span>
         </div>
       </div>
     </div>
 
     <!-- Card: Información del Emisor -->
     <div class="card">
-      <h2><span class="icon">
-        <i class="fa-solid fa-landmark"></i>
-      </span> Información del Emisor</h2>
+      <h2><span class="icon"><i class="fa-solid fa-landmark"></i></span> Información del Emisor</h2>
       <p>Detalles sobre la entidad que emitió el certificado SSL.</p>
       <div class="cert-details">
         <div class="cert-item">
-          <span class="label">Organización</span>
+          <div class="cert-label-group">
+            <i class="fa-solid fa-building icon-sm"></i>
+            <span class="label">Organización</span>
+          </div>
           <span class="value" id="org-name">Cargando...</span>
         </div>
         <div class="cert-item">
-          <span class="label">Ubicación</span>
+          <div class="cert-label-group">
+            <i class="fa-solid fa-map-marker-alt icon-sm"></i>
+            <span class="label">Ubicación</span>
+          </div>
           <span class="value" id="org-location">Cargando...</span>
         </div>
         <div class="cert-item">
-          <span class="label">Tipo de Certificado</span>
+          <div class="cert-label-group">
+            <i class="fa-solid fa-certificate icon-sm"></i>
+            <span class="label">Tipo de Certificado</span>
+          </div>
           <span class="value" id="cert-type">Cargando...</span>
         </div>
         <div class="cert-item">
-          <span class="label">Validez</span>
+          <div class="cert-label-group">
+            <i class="fa-solid fa-calendar-check icon-sm"></i>
+            <span class="label">Validez</span>
+          </div>
           <span class="value" id="cert-validity">Cargando...</span>
         </div>
       </div>
@@ -115,17 +126,32 @@
 
     <!-- Card: Usos del Certificado -->
     <div class="card">
-      <h2><span class="icon">
-        <i class="fa-solid fa-key"></i>
-      </span> Usos del Certificado</h2>
+      <h2><span class="icon"><i class="fa-solid fa-key"></i></span> Usos del Certificado</h2>
       <p>Propósitos autorizados para este certificado de seguridad.</p>
       <ul class="tech-list" id="key-usage-list">
-        <li>Cargando información...</li>
+        <li><i class="fa-solid fa-spinner loading"></i> Cargando información...</li>
       </ul>
     </div>
 
   </div>
 
+  <!-- Modal para Certificado SSL -->
+  <div id="cert-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2><i class="fa-solid fa-scroll"></i> Detalles del Certificado SSL</h2>
+        <span class="close-btn">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div id="cert-details-content">
+          <p class="loading-text"><i class="fa-solid fa-spinner loading"></i> Cargando información del certificado...
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="./js/main.js"></script>
 </body>
+
 </html>

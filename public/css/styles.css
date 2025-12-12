@@ -78,6 +78,11 @@ body::before {
   66% { transform: translate(5%, 5%) rotate(240deg); }
 }
 
+/* Evitar scroll en el fondo cuando el modal está activo */
+body.modal-open {
+  overflow: hidden;
+}
+
 /* Header Hero Section */
 .header {
   text-align: center;
@@ -288,6 +293,17 @@ button:active {
   transform: translateX(4px);
 }
 
+.cert-label-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-sm {
+  color: var(--text-accent);
+  font-size: 14px;
+}
+
 .cert-item .label {
   font-weight: 600;
   color: var(--text-secondary);
@@ -451,6 +467,85 @@ button:active {
   to { transform: rotate(360deg); }
 }
 
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal.active {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  width: 90%;
+  max-width: 800px;
+  max-height: 80vh;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg), var(--shadow-glow);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--glass-border);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 25px;
+  background: var(--glass-bg);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.close-btn {
+  font-size: 28px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.close-btn:hover {
+  color: var(--text-primary);
+}
+
+.modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  max-height: calc(80vh - 140px); /* Ajustar altura disponible */
+}
+
+#cert-details-content {
+  display: grid;
+  gap: 16px;
+}
+
+.loading-text {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 16px;
+  padding: 20px;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .header h1 {
@@ -458,11 +553,11 @@ button:active {
   }
 
   .header .lock-icon i {
-  font-size: 72px;
-  display: inline-block;
-  animation: pulse 2s ease infinite, fadeIn 0.8s ease 0.1s backwards;
-  filter: drop-shadow(0 0 20px rgba(0, 242, 254, 0.5));
-}
+    font-size: 72px;
+    display: inline-block;
+    animation: pulse 2s ease infinite, fadeIn 0.8s ease 0.1s backwards;
+    filter: drop-shadow(0 0 20px rgba(0, 242, 254, 0.5));
+  }
   
   .dashboard {
     grid-template-columns: 1fr;
@@ -482,6 +577,17 @@ button:active {
   
   .cert-item .value {
     text-align: left;
+  }
+
+  .cert-label-group {
+    align-items: center;
+  }
+
+  /* Modal responsive */
+  .modal-content {
+    width: 95%;
+    max-width: 95%;
+    max-height: 90vh;
   }
 }
 
